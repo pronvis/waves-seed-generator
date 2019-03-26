@@ -1,0 +1,17 @@
+[package]
+name = "waves-address-generator"
+version = "0.1.0"
+authors = ["Aleksandrov Vladimir <invis87@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+rand = "^0.6"
+rust-crypto = "^0.2"
+
+blake2 = "0.8"
+sha3 = "0.8.1"
+
+crev-common = "0.3.0"
+hashlib = "0.1.0"
+
+base58 = "^0.1"
