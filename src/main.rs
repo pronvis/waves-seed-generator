@@ -8,11 +8,11 @@ use std::time::Duration;
 use std::thread::JoinHandle;
 
 const ADDRESS_SIZE: usize = 35;
-static NTHREADS: i32 = 5;
 
 fn main() {
     let env_args: Vec<String> = env::args().collect();
-    let looking_for = &env_args[1..];
+    let threads_count: u32 = env_args[1].parse().unwrap();
+    let looking_for = &env_args[2..];
 
     let mut worlds: HashMap<String, usize> = HashMap::new();
     for looking in looking_for.iter() {
@@ -20,7 +20,7 @@ fn main() {
     }
 
     let mut children: Vec<JoinHandle<()>> = vec![];
-    for i in 0..NTHREADS {
+    for i in 0..threads_count {
         let handler = run_some_work(&worlds);
         children.push(handler);
     };
