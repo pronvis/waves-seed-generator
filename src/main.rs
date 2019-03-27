@@ -37,7 +37,8 @@ fn run_some_work(worlds: &HashMap<String, usize>) -> JoinHandle<()> {
     HashMap::clone_from(&mut map_copy, &worlds);
 
     thread::spawn(move || {
-        println!("first thread starts with input: {:?}", map_copy);
+        let thread_id = thread::current().id();
+        println!("{:?} thread starts with input: {:?}", thread_id, map_copy);
         loop {
             some_work(&map_copy);
         }
