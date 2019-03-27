@@ -20,7 +20,7 @@ fn main() {
     }
 
     let mut children: Vec<JoinHandle<()>> = vec![];
-    for i in 0..threads_count {
+    for _i in 0..threads_count {
         let handler = run_some_work(&worlds);
         children.push(handler);
     };
@@ -28,7 +28,7 @@ fn main() {
     println!("----------");
 
     for child in children {
-        child.join();
+        let _ = child.join();
     }
 }
 
