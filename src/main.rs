@@ -7,6 +7,8 @@ use std::thread;
 use std::time::Duration;
 use std::thread::JoinHandle;
 
+use std::time::Instant;
+
 const ADDRESS_SIZE: usize = 35;
 
 fn main() {
@@ -35,20 +37,30 @@ fn main() {
 fn run_some_work(worlds: &HashMap<String, usize>) -> JoinHandle<()> {
     let mut map_copy: HashMap<String, usize> = HashMap::new();
     HashMap::clone_from(&mut map_copy, &worlds);
-
     thread::spawn(move || {
-        println!("first thread starts with input: {:?}", map_copy);
+        let thread_id = thread::current().id();
+        println!("{:?} thread starts with input: {:?}", thread_id, map_copy);
+        let mut counter = 0;
+        let start = Instant::now();
+        let mut curr_time = start.elapsed().as_millis();
         loop {
             some_work(&map_copy);
+            if(counter % 50000 == 0) {
+                let elapsed_time = start.elapsed().as_millis();
+                println!("> {} <   {:?} :: {}", elapsed_time - curr_time, thread_id, counter);
+                curr_time = elapsed_time;
+            }
+            counter += 1;
         }
     })
 }
 
 fn some_work(worlds: &HashMap<String, usize>) -> () {
     let seed_with_address = seed_generator::generate_seed_with_address();
-    if check_address(worlds, &seed_with_address.address) {
-        println!("seed: {}\naddress: {}\n----------", seed_with_address.seed, seed_with_address.address)
-    }
+    check_address(worlds, &seed_with_address.address);
+//    if check_address(worlds, &seed_with_address.address) {
+//        println!("seed: {}\naddress: {}\n----------", seed_with_address.seed, seed_with_address.address)
+//    }
 }
 
 fn check_address(worlds: &HashMap<String, usize>, address: &str) -> bool {
