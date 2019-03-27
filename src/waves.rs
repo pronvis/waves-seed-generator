@@ -9,8 +9,7 @@ use base58::FromBase58;
 
 static  PROD_SCHEMA_BYTE: u8 = 87;// for char 'W'
 
-pub fn address_from_seed(seed: &str) -> String {
-    let seed_bytes = seed.as_bytes();
+pub fn address_from_seed(seed_bytes: &[u8]) -> String {
     let with_4_zeroes = [&[0; 4], seed_bytes].concat();
     let keccak256 = waves_secure_hash(&with_4_zeroes);
     let public_key = public_key(&keccak256);

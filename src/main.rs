@@ -1,6 +1,9 @@
 mod waves;
 mod seed_generator;
 
+#[macro_use]
+extern crate lazy_static;
+
 use std::env;
 use std::collections::HashMap;
 use std::thread;
@@ -45,7 +48,7 @@ fn run_some_work(worlds: &HashMap<String, usize>) -> JoinHandle<()> {
         let mut curr_time = start.elapsed().as_millis();
         loop {
             some_work(&map_copy);
-            if(counter % 50000 == 0) {
+            if counter % 50000 == 0 {
                 let elapsed_time = start.elapsed().as_millis();
                 println!("> {} <   {:?} :: {}", elapsed_time - curr_time, thread_id, counter);
                 curr_time = elapsed_time;
