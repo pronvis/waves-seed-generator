@@ -2,10 +2,11 @@ use blake2::Digest;
 use sha3::Keccak256;
 use crev_common::blake2b256::Blake2b256;
 use crypto::digest::Digest as Crypto_Digest;
-use crypto::curve25519::curve25519_base;
 use crypto::sha2::Sha256;
 use base58::ToBase58;
 use base58::FromBase58;
+
+extern crate x25519_dalek;
 
 static  PROD_SCHEMA_BYTE: u8 = 87;// for char 'W'
 
@@ -38,7 +39,7 @@ fn public_key(secure_hash: &[u8]) -> [u8; 32] {
     let mut sha256_result: [u8; 32] = [0; 32];
     hasher.result(&mut sha256_result);
 
-    curve25519_base(&sha256_result)
+    x25519_dalek::x25519(sha256_result, x25519_dalek::X25519_BASEPOINT_BYTES)
 }
 
 fn waves_address_from_public_key(input: &[u8], chain_id: u8) -> String {
