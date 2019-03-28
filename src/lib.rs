@@ -6,7 +6,7 @@ use std::thread;
 use std::time::Duration;
 use std::thread::JoinHandle;
 
-pub fn main_thing(threads_count: u32, looking_for: &[String]) {
+pub fn generate_seeds(threads_count: u32, looking_for: &[String]) {
     let mut worlds: HashMap<String, usize> = HashMap::new();
     for looking in looking_for.iter() {
         worlds.insert(looking.to_string(), looking.len());
@@ -14,7 +14,7 @@ pub fn main_thing(threads_count: u32, looking_for: &[String]) {
 
     let mut children: Vec<JoinHandle<()>> = vec![];
     for _i in 0..threads_count {
-        let handler = run_some_work(&worlds);
+        let handler = spawn_thread_to_generate_seeds(&worlds);
         children.push(handler);
     };
     thread::sleep(Duration::from_secs(1));
@@ -25,7 +25,7 @@ pub fn main_thing(threads_count: u32, looking_for: &[String]) {
     }
 }
 
-fn run_some_work(worlds: &HashMap<String, usize>) -> JoinHandle<()> {
+fn spawn_thread_to_generate_seeds(worlds: &HashMap<String, usize>) -> JoinHandle<()> {
     let mut map_copy: HashMap<String, usize> = HashMap::new();
     HashMap::clone_from(&mut map_copy, &worlds);
 
