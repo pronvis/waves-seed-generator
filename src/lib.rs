@@ -1,5 +1,5 @@
 mod waves;
-mod seed_generator;
+pub mod seed_generator;
 
 use std::collections::HashMap;
 use std::thread;
