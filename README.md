@@ -17,4 +17,4 @@ Options:
 
    b. `./target/release/waves-address-generator -m 4 {word1} {word2}`
 
-For example `./waves-address-generator -f -w xxx yyy` will start generator with consuming all available CPU. It will print only those seeds which address ends with "xxx" or "yyy".
+For example `./waves-address-generator -f xxx yyy` will start generator with consuming all available CPU. It will print only those seeds which address ends with "xxx" or "yyy".
