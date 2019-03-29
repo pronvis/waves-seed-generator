@@ -16,3 +16,10 @@ crev-common = "0.3.0"
 hashlib = "0.1.0"
 
 base58 = "^0.1"
+
+[dev-dependencies]
+criterion = "0.2"
+
+[[bench]]
+name = "seed_generation"
+harness = false
