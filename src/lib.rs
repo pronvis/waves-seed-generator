@@ -6,15 +6,23 @@ use std::thread;
 use std::time::Duration;
 use std::thread::JoinHandle;
 
-pub fn generate_seeds(threads_count: u32, looking_for: &[String]) {
-    let mut worlds: HashMap<String, usize> = HashMap::new();
-    for looking in looking_for.iter() {
-        worlds.insert(looking.to_string(), looking.len());
-    }
+use rayon::prelude::*;
+use seed_generator::AddressWithSeed;
+
+pub fn generate_seeds_by_par_iter(worlds: &HashMap<String, usize>) {
+    println!("starts with input: {:?}", worlds);
+
+    rayon::iter::repeat(0)
+        .map(|_| seed_generator::generate_seed_with_address())
+        .filter(|seed_with_address| seed_generator::check_address(worlds, &seed_with_address.address) == true)
+        .for_each(print_result);
+}
+
+pub fn generate_seeds_in_threads(threads_count: u32, worlds: &HashMap<String, usize>) {
 
     let mut children: Vec<JoinHandle<()>> = vec![];
     for _i in 0..threads_count {
-        let handler = spawn_thread_to_generate_seeds(&worlds);
+        let handler = spawn_thread_to_generate_seeds(worlds);
         children.push(handler);
     };
     thread::sleep(Duration::from_secs(1));
@@ -34,9 +42,11 @@ fn spawn_thread_to_generate_seeds(worlds: &HashMap<String, usize>) -> JoinHandle
         println!("{:?} thread starts with input: {:?}", thread_id, map_copy);
         loop {
             let seed_with_address = seed_generator::generate_seed_with_address_for_worlds(&map_copy);
-            println!("seed: {}\naddress: {}\n----------", seed_with_address.seed, seed_with_address.address);
+            print_result(seed_with_address);
         }
     })
 }
 
-
+fn print_result(seed_with_address: AddressWithSeed) -> () {
+    println!("seed: {}\naddress: {}\n----------", seed_with_address.seed, seed_with_address.address);
+}
